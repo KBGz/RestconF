@@ -1,22 +1,15 @@
 """
-skill.py — RESTCONF skill implementation
-Project: ARS110_HT26_RestConf_GruppX
-Skill: Full network configuration (interfaces, RIP, ACL)
+skill.py — RESTCONF
 
-Structure — one API call per logical config item (no single "native:native" PUT):
+Structure — one API call per logical config item :
     Part 1: ISPN Loopback0             (ietf-interfaces)
     Part 2: ISPN Serial0/1/0           (Cisco-IOS-XE-native — Serial has poor IETF support)
     Part 3: JUNK Serial0/1/0           (Cisco-IOS-XE-native)
     Part 4: JUNK GigabitEthernet0/0/0  (ietf-interfaces)
     Part 5/6: RIP on both routers      (native — PUT to create process, PATCH per network)
     Part 7: ACL on JUNK                (native Cisco-IOS-XE-acl)
-    Part 7b: Bind ACL to interface     (native access-group)
+    Part 8: Bind ACL to interface     (native access-group)
 
-AUTH NOTE (documented in report):
-    - Token auth via /api/v1/auth/token-services → 411 (nginx rejects)
-    - Token auth via /dna/system/api/v1/auth/token → 404 (not exposed)
-    - mTLS with client cert + trustpoint + clientAuth EKU → 401
-    - Fallback: Basic Auth over HTTPS with verify=False (lab only)
 """
 
 import requests
@@ -238,7 +231,7 @@ def config_junk_acl():
     restconf("JUNK", "PUT", acl_path, acl_payload, "define ACL BLOCK_WEB")
 
 
-# ═══ Part 7b: Bind ACL to JUNK LAN interface ═══════════════
+# ═══ Part 8: Bind ACL to JUNK LAN interface ═══════════════
 def apply_acl_to_interface():
     print("\n[Part 7b] Bind ACL to JUNK G0/0/0 inbound")
     path = (
