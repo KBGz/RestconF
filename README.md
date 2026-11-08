@@ -25,4 +25,4 @@ Status: 401
 PS C:\Users\cisco\Documents\Rest-Conf\Certs>
 
 
-So had to Use the BasicAuth with Username+Password to get it to even work.
+So had to fall back on using the BasicAuth with Username+Password to get it to even work.
