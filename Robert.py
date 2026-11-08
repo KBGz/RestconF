@@ -1,6 +1,5 @@
 """
 robert.py — automated grader for the skill assignment.
-Reads device state via RESTCONF (GET only — no ping, no config changes).
 
 Checks:
     C1: ISPN Loopback0 IP = 192.168.128.129/25
@@ -10,18 +9,8 @@ Checks:
     C5: ISPN RIP networks = {192.168.128.0, 192.168.129.0}
     C6: JUNK RIP networks = {192.168.129.0, 192.168.130.0}
     C7: JUNK ACL BLOCK_WEB present with deny+permit+permit rules
-    C8: JUNK routing table has RIP-learned 192.168.128.0/25 (SKIP if model unsupported)
+    C8: JUNK routing table has RIP-learned 192.168.128.0/25 
 
-Design notes (for report §"Grade like Robert"):
-    - Interface checks read the SAME config model that skill.py writes
-      (ietf-interfaces for Loopback and GigabitEthernet; native for Serial).
-      This deterministically proves the configuration was applied, regardless
-      of platform differences in operational-state YANG models.
-    - Routing-table check (C8) is a bonus — proves RIP is actually routing,
-      not just configured. It is marked SKIP on platforms that don't expose
-      ietf-routing:routing-state, so a correct config on such platforms
-      doesn't get a false FAIL.
-    - Exit code: 0 on PASS, 1 on FAIL (SKIPs do not affect the grade).
 """
 
 import sys
