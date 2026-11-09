@@ -8,7 +8,7 @@ Structure — one API call per logical config item :
     Part 4: JUNK GigabitEthernet0/0/0  (ietf-interfaces)
     Part 5/6: RIP on both routers      (native — PUT to create process, PATCH per network)
     Part 7: ACL on JUNK                (native Cisco-IOS-XE-acl)
-    Part 8: Bind ACL to interface     (native access-group)
+    Part 8: Bind ACL to interface      (native access-group)
 
 """
 
