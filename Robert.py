@@ -69,7 +69,7 @@ def mask_matches(actual, expected_dotted):
         return False
 
 
-# ═══ C1, C4: interface check via ietf-interfaces ════════════
+# ═══ interface check via ietf-interfaces ════════════
 def check_ietf_interface(device, iface_name, expected_ip,
                          expected_mask, check_id):
     desc = f"{device} {iface_name} = {expected_ip} ({expected_mask})"
@@ -98,7 +98,7 @@ def check_ietf_interface(device, iface_name, expected_ip,
            f"interface exists, addresses: {addrs}")
 
 
-# ═══ C2, C3: Serial check via native model ══════════════════
+# ═══ Serial check via native model ══════════════════
 def check_serial(device, serial_num, expected_ip, expected_mask, check_id):
     desc = f"{device} Serial{serial_num} = {expected_ip} ({expected_mask})"
     path = (
@@ -122,7 +122,7 @@ def check_serial(device, serial_num, expected_ip, expected_mask, check_id):
                f"got ip={actual_ip}, mask={actual_mask}")
 
 
-# ═══ C5, C6: RIP network checks ═════════════════════════════
+# ═══ RIP network checks ═════════════════════════════
 def check_rip(device, expected_networks, check_id):
     desc = f"{device} RIP networks = {sorted(expected_networks)}"
     data = get(device,
@@ -144,7 +144,7 @@ def check_rip(device, expected_networks, check_id):
                f"missing={sorted(missing)}, extra={sorted(extra)}")
 
 
-# ═══ C7: ACL check ══════════════════════════════════════════
+# ═══ ACL check ══════════════════════════════════════════
 def check_acl(device, acl_name, check_id):
     desc = f"{device} ACL '{acl_name}' has deny+permit+permit rules"
     path = (
@@ -174,7 +174,7 @@ def check_acl(device, acl_name, check_id):
                f"expected={expected}, actual={actual}")
 
 
-# ═══ C8: RIP-learned route in operational table ═════════════
+# ═══ RIP-learned route in operational table ═════════════
 def check_rip_route(device, expected_prefix, check_id):
     """SKIP if operational routing model isn't supported (avoids false negatives)."""
     desc = f"{device} routing table has RIP-learned route to {expected_prefix}"
@@ -211,30 +211,30 @@ def main():
     print("robert.py — grading the skill configuration")
     print("=" * 60)
 
-    # C1: ISPN Loopback0 (ietf-interfaces)
+    # 1: ISPN Loopback0 (ietf-interfaces)
     check_ietf_interface("ISPN", "Loopback0",
                          "192.168.128.129", "255.255.255.128", "C1")
 
-    # C2: ISPN Serial0/1/0 (native)
+    # 2: ISPN Serial0/1/0 (native)
     check_serial("ISPN", "0/1/0",
                  "192.168.129.1", "255.255.255.252", "C2")
 
-    # C3: JUNK Serial0/1/0 (native)
+    # 3: JUNK Serial0/1/0 (native)
     check_serial("JUNK", "0/1/0",
                  "192.168.129.2", "255.255.255.252", "C3")
 
-    # C4: JUNK GigabitEthernet0/0/0 (ietf-interfaces)
+    # 4: JUNK GigabitEthernet0/0/0 (ietf-interfaces)
     check_ietf_interface("JUNK", "GigabitEthernet0/0/0",
                          "192.168.130.1", "255.255.255.0", "C4")
 
-    # C5, C6: RIP config
+    # 5 and 6: RIP config
     check_rip("ISPN", ["192.168.128.0", "192.168.129.0"], "C5")
     check_rip("JUNK", ["192.168.129.0", "192.168.130.0"], "C6")
 
-    # C7: ACL
+    # 7: ACL
     check_acl("JUNK", "BLOCK_WEB", "C7")
 
-    # C8: live RIP route (SKIP if model unsupported)
+    # 8: live RIP route (SKIP if model unsupported)
     check_rip_route("JUNK", "192.168.128.0/25", "C8")
 
     # ── Report ──────────────────────────────────────────────
